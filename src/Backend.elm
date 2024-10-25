@@ -1,6 +1,7 @@
 module Backend exposing (..)
 
 import Lamdera exposing (ClientId, SessionId)
+import Module
 import Types exposing (..)
 
 
@@ -10,18 +11,22 @@ type alias Model =
 
 app =
     Lamdera.backend
-        { init = init
+        { init = init True
         , update = update
         , updateFromFrontend = updateFromFrontend
         , subscriptions = \m -> Sub.none
         }
 
 
-init : ( Model, Cmd BackendMsg )
-init =
-    ( { message = "Hello!" }
-    , Cmd.none
-    )
+init : Bool -> ( Model, Cmd BackendMsg )
+init firstCall =
+    if firstCall then
+        init False
+
+    else
+        ( { message = Module.dummyConfigItem }
+        , Cmd.none
+        )
 
 
 update : BackendMsg -> Model -> ( Model, Cmd BackendMsg )
